@@ -7,14 +7,14 @@
   
   <title>Selenium底层实现原理详解 | 测试开发小白变怪兽</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Selenium 简介 Selenium 是目前主流的用于Web应用程序测试的工具，可以直接运行在浏览器中，就像真正的用户在操作一样。 Selenium 原理 Selenium工作的过程中有三个角色，其一便是跟我们最近的自动化测试代码：自动化测试代码发送请求给浏览器的驱动；其二便是浏览器的驱动：每个浏览器都有自己的驱动，均以exe文件形式存在，比如谷歌的chromedriver.exe、火狐的ge">
+  <meta name="description" content="Selenium 简介 Selenium 是目前主流的用于Web应用程序测试的工具，可以直接运行在浏览器中，就像真正的用户在操作一样。 Selenium 原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Selenium底层实现原理详解">
 <meta property="og:url" content="http://yoursite.com/2020/03/28/Selenium%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/">
 <meta property="og:site_name" content="测试开发小白变怪兽">
-<meta property="og:description" content="Selenium 简介 Selenium 是目前主流的用于Web应用程序测试的工具，可以直接运行在浏览器中，就像真正的用户在操作一样。 Selenium 原理 Selenium工作的过程中有三个角色，其一便是跟我们最近的自动化测试代码：自动化测试代码发送请求给浏览器的驱动；其二便是浏览器的驱动：每个浏览器都有自己的驱动，均以exe文件形式存在，比如谷歌的chromedriver.exe、火狐的ge">
+<meta property="og:description" content="Selenium 简介 Selenium 是目前主流的用于Web应用程序测试的工具，可以直接运行在浏览器中，就像真正的用户在操作一样。 Selenium 原理">
 <meta property="article:published_time" content="2020-03-28T15:13:30.000Z">
-<meta property="article:modified_time" content="2020-03-28T15:30:24.314Z">
+<meta property="article:modified_time" content="2020-03-28T15:36:03.899Z">
 <meta property="article:author" content="Super于">
 <meta name="twitter:card" content="summary">
   
@@ -94,6 +94,8 @@
         <p><strong>Selenium 简介</strong></p>
 <p>Selenium 是目前主流的用于Web应用程序测试的工具，可以直接运行在浏览器中，就像真正的用户在操作一样。</p>
 <p><strong>Selenium 原理</strong></p>
+<a id="more"></a>
+
 <p>Selenium工作的过程中有三个角色，其一便是跟我们最近的自动化测试代码：自动化测试代码发送请求给浏览器的驱动；其二便是浏览器的驱动：每个浏览器都有自己的驱动，均以exe文件形式存在，比如谷歌的chromedriver.exe、火狐的geckodriver.exe、IE的IEDriverServer.exe，它来解析这些自动化测试的代码，解析后把它们发送给浏览器；其三便是浏览器：执行浏览器驱动发来的指令，并最终完成工程师想要的操作。</p>
 <p>下面以谷歌浏览器为例：</p>
 <p>首先，selenium client 会初始化一个 service 服务，通过 Webdriver 启动浏览器驱动程序 chromedriver.exe；</p>

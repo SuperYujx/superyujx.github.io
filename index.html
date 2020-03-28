@@ -94,29 +94,11 @@
         <p><strong>Selenium 简介</strong></p>
 <p>Selenium 是目前主流的用于Web应用程序测试的工具，可以直接运行在浏览器中，就像真正的用户在操作一样。</p>
 <p><strong>Selenium 原理</strong></p>
-<p>Selenium工作的过程中有三个角色，其一便是跟我们最近的自动化测试代码：自动化测试代码发送请求给浏览器的驱动；其二便是浏览器的驱动：每个浏览器都有自己的驱动，均以exe文件形式存在，比如谷歌的chromedriver.exe、火狐的geckodriver.exe、IE的IEDriverServer.exe，它来解析这些自动化测试的代码，解析后把它们发送给浏览器；其三便是浏览器：执行浏览器驱动发来的指令，并最终完成工程师想要的操作。</p>
-<p>下面以谷歌浏览器为例：</p>
-<p>首先，selenium client 会初始化一个 service 服务，通过 Webdriver 启动浏览器驱动程序 chromedriver.exe；</p>
-<p>接着通过 RemoteWebDriver 向浏览器驱动程序发送 HTTP 请求，浏览器驱动程序解析请求，并获得 sessionId，如果再次对浏览器操作需携带此 id；</p>
-<p>接下来打开浏览器，绑定特定的端口，把启动后的浏览器作为 Webdriver 的Remote Server；</p>
-<p>打开浏览器后，每一条 Selenium 脚本，一个 http 请求会被创建并且发送给浏览器，浏览器执行具体的测试步骤后再将步骤执行结果返回给 Remote Server，Remote Server 又将结果返回给 Selenium 的脚本，如果是错误的 http 代码我们就会在控制台看到对应的报错信息。</p>
-<p><strong>WebDriver 和 Selenium-Server 区别</strong></p>
-<p>你可能需要，也可能不需要 Selenium Server，取决于你打算如何使用 Selenium-WebDriver。如果你仅仅需要使用 WebDriver API，那就不需要 Selenium-Server。如果你所有的测试和浏览器都在一台机器上，那么你仅需要 WebDriver API。WebDriver 将直接操作浏览器。</p>
-<p>在有些情况下，你需要使用 Selenium-Server 来配合 Selenium-WebDriver 工作，例如：<br>你使用 Selenium-Grid 来分发你的测试给多个机器或者虚拟机。<br>你希望连接一台远程的机器来测试一个特定的浏览器。<br>你没有使用 Java 绑定（例如 Python, C#, 或 Ruby），并且可能希望使用 HtmlUnit Driver。</p>
-<p><strong>底层实现原理</strong></p>
-<p>下面先写一个通过火狐浏览器启动百度首页的脚本：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from selenium import webdriver</span><br><span class="line">import logging</span><br><span class="line"></span><br><span class="line">logging.basicConfig(level&#x3D;logging.DEBUG)  # 打印源码中的日志</span><br><span class="line">driver &#x3D; webdriver.Firefox()</span><br><span class="line">driver.get(&#39;https:&#x2F;&#x2F;www.baidu.com&#39;)</span><br></pre></td></tr></table></figure>
-
-<p>打印日志如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DEBUG:selenium.webdriver.remote.remote_connection:POST http:&#x2F;&#x2F;127.0.0.1:61123&#x2F;session &#123;&quot;desiredCapabilities&quot;: &#123;&quot;goog:chromeOptions&quot;: &#123;&quot;args&quot;: [], &quot;extensions&quot;: []&#125;, &quot;version&quot;: &quot;&quot;, &quot;platform&quot;: &quot;ANY&quot;, &quot;browserName&quot;: &quot;chrome&quot;&#125;, &quot;capabilities&quot;: &#123;&quot;alwaysMatch&quot;: &#123;&quot;goog:chromeOptions&quot;: &#123;&quot;args&quot;: [], &quot;extensions&quot;: []&#125;, &quot;browserName&quot;: &quot;chrome&quot;, &quot;platformName&quot;: &quot;any&quot;&#125;, &quot;firstMatch&quot;: [&#123;&#125;]&#125;&#125;</span><br><span class="line">DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): 127.0.0.1:61123</span><br><span class="line">DEBUG:urllib3.connectionpool:http:&#x2F;&#x2F;127.0.0.1:61123 &quot;POST &#x2F;session HTTP&#x2F;1.1&quot; 200 888</span><br><span class="line">DEBUG:selenium.webdriver.remote.remote_connection:Finished Request</span><br><span class="line">DEBUG:selenium.webdriver.remote.remote_connection:POST http:&#x2F;&#x2F;127.0.0.1:61123&#x2F;session&#x2F;5f34300c89d868afb8907145fea1639d&#x2F;url &#123;&quot;sessionId&quot;: &quot;5f34300c89d868afb8907145fea1639d&quot;, &quot;url&quot;: &quot;https:&#x2F;&#x2F;www.baidu.com&quot;&#125;</span><br><span class="line">DEBUG:urllib3.connectionpool:http:&#x2F;&#x2F;127.0.0.1:61123 &quot;POST &#x2F;session&#x2F;5f34300c89d868afb8907145fea1639d&#x2F;url HTTP&#x2F;1.1&quot; 200 72</span><br><span class="line">DEBUG:selenium.webdriver.remote.remote_connection:Finished Request</span><br></pre></td></tr></table></figure>
-
-<p>可以看到，首先通过 Webdriver 启动浏览器驱动程序 chromedriver.exe，打开浏览器，并获得 sessionId，然后再向带上 sessionId 向浏览器发送打开百度主页的请求。</p>
-<p>下面自己通过 requests 模块来模拟这一系列过程（执行之前首先要打开selenium-server 服务，我是使用的 selenium-server 服务，你也可以使用浏览器服务）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"># coding&#x3D;utf-8</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class MySelenium:</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.driver &#x3D; self.my_webdriver_firefox()</span><br><span class="line"></span><br><span class="line">    def my_webdriver_firefox(self):</span><br><span class="line">        &#39;&#39;&#39;</span><br><span class="line">        获取driver</span><br><span class="line">        :return:</span><br><span class="line">        &#39;&#39;&#39;</span><br><span class="line">        driver_url &#x3D; &#39;http:&#x2F;&#x2F;127.0.0.1:4444&#x2F;wd&#x2F;hub&#x2F;session&#x2F;&#39;</span><br><span class="line">        # 打开浏览器的请求参数</span><br><span class="line">        driver_value &#x3D; &#123;&quot;capabilities&quot;:</span><br><span class="line">                            &#123;&quot;alwaysMatch&quot;:</span><br><span class="line">                                 &#123;&quot;browserName&quot;: &quot;firefox&quot;, &#125;</span><br><span class="line">                             &#125;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">        # 发送求清</span><br><span class="line">        response_session &#x3D; requests.post(driver_url, json&#x3D;driver_value)</span><br><span class="line">        # 获取返回的 sessionId</span><br><span class="line">        my_sessionId &#x3D; response_session.json()[&#39;value&#39;][&#39;sessionId&#39;]</span><br><span class="line">        return driver_url + my_sessionId</span><br><span class="line"></span><br><span class="line">    def my_get(self, url):</span><br><span class="line">        &#39;&#39;&#39;</span><br><span class="line">        通过get方式访问网址</span><br><span class="line">        :param url:</span><br><span class="line">        :return:</span><br><span class="line">        &#39;&#39;&#39;</span><br><span class="line">        temp_url &#x3D; self.driver + &#39;&#x2F;url&#39;</span><br><span class="line">        value &#x3D; &#123;&#39;url&#39;: url&#125;</span><br><span class="line">        requests.post(temp_url, json&#x3D;value)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    obj_my_selenium &#x3D; MySelenium()</span><br><span class="line">    obj_my_selenium.my_get(&#39;https:&#x2F;&#x2F;www.baidu.com&#x2F;&#39;)</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>我是「Super于」，立志做一个每天都有正反馈的人！</p>
-
+        
+          <p class="article-more-link">
+            <a href="/2020/03/28/Selenium%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
@@ -153,7 +135,11 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>我的第一篇 blog，用来测试流程。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import time</span><br><span class="line"></span><br><span class="line">print(&#39;My first blog.&#39;)</span><br><span class="line">time.sleep(5)</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2020/03/28/test/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
@@ -191,18 +177,11 @@
       
         <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
+        
+          <p class="article-more-link">
+            <a href="/2020/03/28/hello-world/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
